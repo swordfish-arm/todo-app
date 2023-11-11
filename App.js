@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { 
 	View, 
 	Image,
-	Text, 
-	TextInput, 
-	TouchableOpacity, 
+	Text,   
 	FlatList, 
 	StyleSheet, 
 } from "react-native"; 
 
-const App = () => { 
-	const [task, setTask] = useState(""); 
-	const [tasks, setTasks] = useState([]); 
-	const [editIndex, setEditIndex] = useState(-1); 
+import {Avatar, Card, IconButton,TextInput, PaperProvider,Button , MD3LightTheme} from 'react-native-paper';
+
+const TodoList = () => {
+	const [task, setTask] = React.useState(""); 
+	const [tasks, setTasks] = React.useState([]); 
+	const [editIndex, setEditIndex] = React.useState(-1); 
 
 	const handleAddTask = () => { 
 		if (task) { 
@@ -48,113 +48,130 @@ const App = () => {
 				style={styles.itemList}>{item}</Text> 
 			<View 
 				style={styles.taskButtons}> 
-				<TouchableOpacity 
+				<Button 
+					icon="application-edit-outline" mode="text" 
 					onPress={() => handleEditTask(index)}> 
 					<Text 
 						style={styles.editButton}>Edit</Text> 
-				</TouchableOpacity> 
-				<TouchableOpacity 
+				</Button> 
+				<Button 
+					icon="delete-alert-outline" mode="text" 
 					onPress={() => handleDeleteTask(index)}> 
 					<Text 
 						style={styles.deleteButton}>Delete</Text> 
-				</TouchableOpacity> 
+				</Button> 
 			</View> 
 		</View> 
 	); 
+	
+	const theme = {
+		...MD3LightTheme,
+		roundness: 2,
+		colors: { 
+		  ...MD3LightTheme.colors, // you're missing that line
+		  primary: 'rgb(29, 27, 30)',
+		  onPrimary: "white",
+		  secondary: "rgb(208, 193, 218)",
+		  onSecondary: "white"
+		}
+	  };
 
-	return ( 
-		<View style={styles.container}> 
-			
-			
-			<Image 
-				style={{ alignSelf: 'center', width: 50, height: 50}}
-				resizeMode="contain"
-				source={require('./assets/pngwing.png')}
-			/>
-			<Text style={styles.title}>ToDo App - EL106</Text> 
+	const styles = StyleSheet.create({ 
+		container: { 
+			flex: 1, 
+			padding: 40, 
+			marginTop: 40, 
+		}, 
+		title: { 
+			fontSize: 24, 
+			fontWeight: "bold", 
+			marginBottom: 20, 
+		}, 
+		heading: { 
+			fontSize: 30, 
+			fontWeight: "bold", 
+			marginBottom: 7, 
+			color: "green", 
+		}, 
+		input: { 
+			borderColor: "#ccc", 
+			padding: 10, 
+			marginBottom: 10, 
+			borderRadius: 10, 
+			fontSize: 18, 
+		}, 
+		addButton: { 
+			backgroundColor: "green", 
+			icon:"camera",
+			padding: 10, 
+			borderRadius: 5, 
+			marginBottom: 10, 
+		}, 
+		addButtonText: { 
+			color: "white", 
+			fontWeight: "bold", 
+			textAlign: "center", 
+			fontSize: 18, 
+		}, 
+		task: { 
+			flexDirection: "row", 
+			justifyContent: "space-between", 
+			alignItems: "center", 
+			marginBottom: 15, 
+			fontSize: 18, 
+		}, 
+		itemList: { 
+			fontSize: 19, 
+		}, 
+		taskButtons: { 
+			flexDirection: "row", 
+		}, 
+		editButton: { 
+			marginRight: 10, 
+			color: "blue", 
+			fontWeight: "bold", 
+			fontSize: 18, 
+		}, 
+		deleteButton: { 
+			color: "red", 
+			fontWeight: "bold", 
+			fontSize: 18, 
+		}, 
+	}); 
+
+  return (
+    <PaperProvider>
+      	<View style={styles.container}> 
+		  	<Card>
+    			<Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+			  	<Card.Title
+				title="ToDo App - EL106"
+				left={(props) => <Avatar.Icon {...props} icon="folder" />}
+				/>
+			</Card>
 			<TextInput 
 				style={styles.input} 
-				placeholder="Enter task"
+				mode="outlined"
+				placeholder="Type something"
+				label="Enter Task"
 				value={task} 
 				onChangeText={(text) => setTask(text)} 
 			/> 
-			<TouchableOpacity 
+			<Button 
 				style={styles.addButton} 
 				onPress={handleAddTask}> 
 				<Text style={styles.addButtonText}> 
 					{editIndex !== -1 ? "Update Task" : "Add Task"} 
 				</Text> 
-			</TouchableOpacity> 
+			</Button> 
 			<FlatList 
 				data={tasks} 
 				renderItem={renderItem} 
 				keyExtractor={(item, index) => index.toString()} 
 			/> 
 		</View> 
-	); 
-}; 
+    </PaperProvider>
+  );
+};
 
-const styles = StyleSheet.create({ 
-	container: { 
-		flex: 1, 
-		padding: 40, 
-		marginTop: 40, 
-	}, 
-	title: { 
-		fontSize: 24, 
-		fontWeight: "bold", 
-		marginBottom: 20, 
-	}, 
-	heading: { 
-		fontSize: 30, 
-		fontWeight: "bold", 
-		marginBottom: 7, 
-		color: "green", 
-	}, 
-	input: { 
-		borderWidth: 3, 
-		borderColor: "#ccc", 
-		padding: 10, 
-		marginBottom: 10, 
-		borderRadius: 10, 
-		fontSize: 18, 
-	}, 
-	addButton: { 
-		backgroundColor: "green", 
-		padding: 10, 
-		borderRadius: 5, 
-		marginBottom: 10, 
-	}, 
-	addButtonText: { 
-		color: "white", 
-		fontWeight: "bold", 
-		textAlign: "center", 
-		fontSize: 18, 
-	}, 
-	task: { 
-		flexDirection: "row", 
-		justifyContent: "space-between", 
-		alignItems: "center", 
-		marginBottom: 15, 
-		fontSize: 18, 
-	}, 
-	itemList: { 
-		fontSize: 19, 
-	}, 
-	taskButtons: { 
-		flexDirection: "row", 
-	}, 
-	editButton: { 
-		marginRight: 10, 
-		color: "green", 
-		fontWeight: "bold", 
-		fontSize: 18, 
-	}, 
-	deleteButton: { 
-		color: "red", 
-		fontWeight: "bold", 
-		fontSize: 18, 
-	}, 
-}); 
-
-export default App;
+export default TodoList;
